@@ -23,31 +23,6 @@ public class ServerApplication{
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ServerApplication.class, args);
-//		try {
-//			Class.forName("oracle.jdbc.driver.OracleDriver");
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		String url = "jdbc:oracle:thin:@172.30.1.19:1521:xe";
-//		String id = "yeonju";
-//		String  password = "sa810500";
-//		
-//		Connection conn;
-//		try {
-//			conn = DriverManager.getConnection(url,id,password);
-//			String sql = "select count(*) from tb_members where id = ?  ";
-//			PreparedStatement psmt = conn.prepareStatement(sql);
-//			psmt.setString(1, "byj7140");
-//			
-//			boolean result = psmt.execute();
-//			System.out.println(result);
-//		} catch (SQLException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//		
-		//db조회 
  		start();
 	}
 	
@@ -56,11 +31,12 @@ public class ServerApplication{
 		Socket socket = null;
 		try {
 			serverSocket = new ServerSocket(8888);
+			System.out.println("서버실행");
 			 // 서버 소켓 생성
 			while(true) {
-				System.out.println("클라이언트 접속 기다리기");
 	            socket = serverSocket.accept();
 	            System.out.println("Client connected: " + socket.getInetAddress().getHostAddress());
+	            //클라이언트가 접속할때마다 스레드 생성 
 	            ChatThread thread = new ChatThread(socket);
 				thread.start();
 			}

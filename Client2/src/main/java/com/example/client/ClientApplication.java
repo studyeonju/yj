@@ -19,44 +19,65 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ClientApplication {
 	
 	
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(ClientApplication.class, args);
 		try {
 			start();
-		} catch (InterruptedException e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 
-	public static void start() throws InterruptedException {
+	public static void start() throws IOException {
+		Socket socket = null;
+		Scanner scanner;
+		InputStream input = null;
+		BufferedReader in = null;
+		OutputStream output=null;
+		PrintWriter writer;
+		String response;
 		try {
-			Socket socket = new Socket("localhost", 8888);
-            Scanner scanner = new Scanner(System.in);
-            // 소켓에서 데이터를 받아오는 InputStream 객체 생성
-            InputStream input = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+			socket = new Socket("localhost", 8888);
+				// TODO Auto-generated catch block
+			scanner = new Scanner(System.in);
+			 // 소켓에서 데이터를 받아오는 InputStream 객체 생성
+            input = socket.getInputStream();
             
             // 소켓으로 데이터를 보내는 OutputStream 객체 생성
-            OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
+            output = socket.getOutputStream();
+            writer = new PrintWriter(output, true);
             
             // 서버로 메시지 전송
-            System.out.println("로그인 id입력해주세여.");
-            String id = scanner.nextLine();
-            writer.println(id);
-            
+            ClientThread ct = new ClientThread(socket);
+            Thread thread = new Thread(ct);
+            thread.start();
             // 서버로부터 받은 메시지 출력
-            String response = reader.readLine();
-            System.out.println("Server response: " + response);
+           
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			while(true) {
+				System.out.println("로그인 id입력해주세여.");
+		        String id = scanner.nextLine();
+		        writer.println(id);
+		        writer.flush();
+		        response = in.readLine();
+		        
+			    System.out.println("Server response: " + response);
+			}
+			
             
             // 소켓 및 스트림 닫기
-            socket.close();
-            input.close();
-            output.close();
-		} catch (IOException e) {
+            
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			socket.close();
+            input.close();
+            output.close();
+			
 		}
 	}
 		   

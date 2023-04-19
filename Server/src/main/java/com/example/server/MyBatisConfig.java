@@ -16,14 +16,13 @@ import org.springframework.context.annotation.Configuration;
 public class MyBatisConfig {
 
     @Autowired
-    ApplicationContext applicationContext;
+    ApplicationContext applicationContext;//찾아..
 
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
-        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath*:mappers/*.xml"));
-        sqlSessionFactoryBean.setTypeAliasesPackage("com.example.demo.dto");
+        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath*:my-batis-mapper/*.xml"));
         
         return sqlSessionFactoryBean.getObject();
     }
